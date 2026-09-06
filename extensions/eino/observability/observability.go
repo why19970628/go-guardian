@@ -14,7 +14,6 @@ import (
 
 	"github.com/cloudwego/eino/callbacks"
 	"github.com/cloudwego/eino/components/model"
-	"github.com/cloudwego/eino/schema"
 	einoUtilsCallbacks "github.com/cloudwego/eino/utils/callbacks"
 	"github.com/why19970628/go-guardian/metrics"
 	"go.uber.org/zap"
