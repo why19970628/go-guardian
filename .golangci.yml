@@ -1,0 +1,27 @@
+run:
+  timeout: 5m
+  tests: true
+  build-tags: []
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gofmt
+    - goimports
+
+linters-settings:
+  errcheck:
+    check-blank: false
+  goimports:
+    local-prefixes: github.com/why19970628/go-guardian
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
