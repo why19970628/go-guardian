@@ -1,3 +1,3 @@
-module github.com/wanghuayang820310/go-guardian/circuitbreaker
+module github.com/why19970628/go-guardian/circuitbreaker
 
 go 1.21

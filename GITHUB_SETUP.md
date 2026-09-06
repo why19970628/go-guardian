@@ -16,14 +16,14 @@
 3. **推送代码**
    ```bash
    cd /Users/wanghuayang/code/bcb/agent/go-guardian
-   git remote add origin https://github.com/wanghuayang820310/go-guardian.git
+   git remote add origin https://github.com/why19970628/go-guardian.git
    git branch -M main
    git push -u origin main
    git push --tags
    ```
 
 4. **创建第一个 Release**
-   - 访问 `https://github.com/wanghuayang820310/go-guardian/releases/new`
+   - 访问 `https://github.com/why19970628/go-guardian/releases/new`
    - Tag: `v0.1.0`
    - Title: `v0.1.0 - Initial Release`
    - Description:
@@ -55,13 +55,13 @@
    
    ### Installation
    ```bash
-   go get github.com/wanghuayang820310/go-guardian/ratelimit
-   go get github.com/wanghuayang820310/go-guardian/circuitbreaker
-   go get github.com/wanghuayang820310/go-guardian/trace
-   go get github.com/wanghuayang820310/go-guardian/metrics
+   go get github.com/why19970628/go-guardian/ratelimit
+   go get github.com/why19970628/go-guardian/circuitbreaker
+   go get github.com/why19970628/go-guardian/trace
+   go get github.com/why19970628/go-guardian/metrics
    ```
    ```
 
 5. **完成后的 URL**
-   - 仓库: `https://github.com/wanghuayang820310/go-guardian`
-   - Release: `https://github.com/wanghuayang820310/go-guardian/releases/tag/v0.1.0`
+   - 仓库: `https://github.com/why19970628/go-guardian`
+   - Release: `https://github.com/why19970628/go-guardian/releases/tag/v0.1.0`

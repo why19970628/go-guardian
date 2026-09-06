@@ -1,9 +1,9 @@
-module github.com/wanghuayang820310/go-guardian/extensions/eino/observability
+module github.com/why19970628/go-guardian/extensions/eino/observability
 
 go 1.21
 
 require (
 	github.com/cloudwego/eino v0.9.13
-	github.com/wanghuayang820310/go-guardian/metrics v0.1.0
+	github.com/why19970628/go-guardian/metrics v0.1.0
 	go.uber.org/zap v1.27.0
 )

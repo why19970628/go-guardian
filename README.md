@@ -105,7 +105,7 @@ Each package is independently importable:
 
 ```bash
 # Install all core packages
-go get github.com/wanghuayang820310/go-guardian/...
+go get github.com/why19970628/go-guardian/...
 ```
 
 ## Quick Start
@@ -114,9 +114,9 @@ go get github.com/wanghuayang820310/go-guardian/...
 
 ```go
 import (
-    "github.com/wanghuayang820310/go-guardian/ratelimit"
-    "github.com/wanghuayang820310/go-guardian/circuitbreaker"
-    "github.com/wanghuayang820310/go-guardian/trace"
+    "github.com/why19970628/go-guardian/ratelimit"
+    "github.com/why19970628/go-guardian/circuitbreaker"
+    "github.com/why19970628/go-guardian/trace"
 )
 
 func processRequest(ctx context.Context, req *Request) error {
@@ -143,8 +143,8 @@ func processRequest(ctx context.Context, req *Request) error {
 ```go
 import (
     "github.com/gin-gonic/gin"
-    ginmw "github.com/wanghuayang820310/go-guardian/middleware/gin"
-    "github.com/wanghuayang820310/go-guardian/ratelimit"
+    ginmw "github.com/why19970628/go-guardian/middleware/gin"
+    "github.com/why19970628/go-guardian/ratelimit"
 )
 
 r := gin.Default()
@@ -163,8 +163,8 @@ r.POST("/api/users", handler)
 ```go
 import (
     "google.golang.org/grpc"
-    grpcmw "github.com/wanghuayang820310/go-guardian/middleware/grpc"
-    "github.com/wanghuayang820310/go-guardian/ratelimit"
+    grpcmw "github.com/why19970628/go-guardian/middleware/grpc"
+    "github.com/why19970628/go-guardian/ratelimit"
 )
 
 // Distributed rate limiter for multi-instance deployment
@@ -186,8 +186,8 @@ server := grpc.NewServer(
 
 ```go
 import (
-    "github.com/wanghuayang820310/go-guardian/extensions/llm"
-    "github.com/wanghuayang820310/go-guardian/extensions/eino"
+    "github.com/why19970628/go-guardian/extensions/llm"
+    "github.com/why19970628/go-guardian/extensions/eino"
 )
 
 // Initialize LLM-specific metrics (TTFT, tokens/s, etc.)
@@ -331,20 +331,20 @@ This project is licensed under the Apache-2.0 License - see [LICENSE](./LICENSE)
 
 ```bash
 # Core packages (framework-agnostic)
-go get github.com/wanghuayang820310/go-guardian/ratelimit
-go get github.com/wanghuayang820310/go-guardian/circuitbreaker
-go get github.com/wanghuayang820310/go-guardian/trace
-go get github.com/wanghuayang820310/go-guardian/metrics
-go get github.com/wanghuayang820310/go-guardian/logger
+go get github.com/why19970628/go-guardian/ratelimit
+go get github.com/why19970628/go-guardian/circuitbreaker
+go get github.com/why19970628/go-guardian/trace
+go get github.com/why19970628/go-guardian/metrics
+go get github.com/why19970628/go-guardian/logger
 
 # Framework adapters
-go get github.com/wanghuayang820310/go-guardian/middleware/gin
-go get github.com/wanghuayang820310/go-guardian/middleware/grpc
-go get github.com/wanghuayang820310/go-guardian/middleware/hertz
+go get github.com/why19970628/go-guardian/middleware/gin
+go get github.com/why19970628/go-guardian/middleware/grpc
+go get github.com/why19970628/go-guardian/middleware/hertz
 
 # Domain-specific extensions (optional)
-go get github.com/wanghuayang820310/go-guardian/extensions/llm      # LLM metrics + fallback
-go get github.com/wanghuayang820310/go-guardian/extensions/eino     # Eino callbacks
+go get github.com/why19970628/go-guardian/extensions/llm      # LLM metrics + fallback
+go get github.com/why19970628/go-guardian/extensions/eino     # Eino callbacks
 ```
 
 ### 使用示例

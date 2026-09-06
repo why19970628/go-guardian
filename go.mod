@@ -1,3 +1,3 @@
-module github.com/wanghuayang820310/go-guardian
+module github.com/why19970628/go-guardian
 
 go 1.24.6

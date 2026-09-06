@@ -1,4 +1,4 @@
-module github.com/wanghuayang820310/go-guardian/extensions/llm/fallback
+module github.com/why19970628/go-guardian/extensions/llm/fallback
 
 go 1.21
 

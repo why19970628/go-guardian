@@ -1,4 +1,4 @@
-module github.com/wanghuayang820310/go-guardian/metrics
+module github.com/why19970628/go-guardian/metrics
 
 go 1.21
 

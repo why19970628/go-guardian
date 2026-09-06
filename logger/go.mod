@@ -1,4 +1,4 @@
-module github.com/wanghuayang820310/go-guardian/logger
+module github.com/why19970628/go-guardian/logger
 
 go 1.21.0
 

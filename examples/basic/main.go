@@ -9,11 +9,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/wanghuayang820310/go-guardian/circuitbreaker"
-	"github.com/wanghuayang820310/go-guardian/fallback"
-	"github.com/wanghuayang820310/go-guardian/metrics"
-	"github.com/wanghuayang820310/go-guardian/ratelimit"
-	"github.com/wanghuayang820310/go-guardian/trace"
+	"github.com/why19970628/go-guardian/circuitbreaker"
+	"github.com/why19970628/go-guardian/fallback"
+	"github.com/why19970628/go-guardian/metrics"
+	"github.com/why19970628/go-guardian/ratelimit"
+	"github.com/why19970628/go-guardian/trace"
 )
 
 func main() {

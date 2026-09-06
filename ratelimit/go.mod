@@ -1,4 +1,4 @@
-module github.com/wanghuayang820310/go-guardian/ratelimit
+module github.com/why19970628/go-guardian/ratelimit
 
 go 1.21
 

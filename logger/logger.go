@@ -12,7 +12,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/wanghuayang820310/go-guardian/trace"
+	"github.com/why19970628/go-guardian/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
