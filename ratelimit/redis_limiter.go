@@ -105,7 +105,7 @@ func (rtb *RedisTokenBucket) Allow(ctx context.Context, key string, config Token
 
 // AllowN 判断是否允许请求 N 个令牌
 func (rtb *RedisTokenBucket) AllowN(ctx context.Context, key string, capacity, rate, requested int64) (bool, error) {
-	return rl.Allow(ctx, key, TokenBucketConfig{
+	return rtb.Allow(ctx, key, TokenBucketConfig{
 		Capacity:  capacity,
 		Rate:      rate,
 		Requested: requested,
