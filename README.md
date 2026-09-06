@@ -1,14 +1,29 @@
 # Go Guardian
 
-[English](#) | [中文](#中文文档)
+[![Go CI](https://github.com/why19970628/go-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/why19970628/go-guardian/actions/workflows/ci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/why19970628/go-guardian)](https://goreportcard.com/report/github.com/why19970628/go-guardian)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub release](https://img.shields.io/github/v/release/why19970628/go-guardian)](https://github.com/why19970628/go-guardian/releases)
 
-Production-ready middleware toolkit for any Go application. Provides rate limiting, circuit breaking, fallback strategies, distributed tracing, and comprehensive observability. Works with **HTTP (Gin, Hertz, net/http)**, **gRPC**, and any Go service.
+[English](#english) | [中文](#中文)
+
+---
+
+## English
+
+Production-ready middleware toolkit for Go applications. Provides rate limiting, circuit breaking, distributed tracing, and comprehensive observability. Works with **HTTP (Gin, Hertz, net/http)**, **gRPC**, and any Go service.
 
 **Use Cases**: Microservices, API gateways, LLM applications, distributed systems, or any Go backend requiring reliability and observability.
 
-## Overview
+### Why Go Guardian?
 
-`llm-guard` is a collection of reusable middleware packages designed to enhance LLM applications with production-grade reliability, observability, and performance management capabilities. Framework-agnostic design works with Gin, Hertz, standard `net/http`, and any Go web framework.
+A universal Go middleware toolkit designed for **any Go application**:
+- **Protocol-agnostic**: Core logic works with HTTP, gRPC, or direct function calls
+- **Framework adapters**: Pre-built adapters for Gin, Hertz, gRPC, and more
+- **Domain-specific extensions**: Generic + specialized (e.g., LLM metrics with TTFT/tokens/s)
+- **Production-tested**: Battle-tested patterns from high-scale distributed systems
+- **Zero lock-in**: Use individual packages independently
+- **Minimal dependencies**: Each package has its own `go.mod`
 
 ### Features
 
@@ -22,95 +37,41 @@ Production-ready middleware toolkit for any Go application. Provides rate limiti
 **Framework Adapters**
 - **HTTP**: Gin, Hertz, `net/http` middleware
 - **gRPC**: Unary and stream interceptors
-- **Coming soon**: Kratos, go-zero, Hertz
+- **Coming soon**: Kratos, go-zero
 
 **Domain-Specific (Optional)**
-- **LLM Applications**: TTFT, token throughput, prompt/completion metrics, Eino callbacks
-- **Database**: Query performance tracking, connection pool metrics
-- **Cache**: Hit rate, latency tracking
+- **LLM Applications**: TTFT (Time To First Token), token throughput, prompt/completion metrics, Eino callbacks
+- **Database**: Query performance tracking (coming soon)
+- **Cache**: Hit rate, latency tracking (coming soon)
 
-### Why Go Guardian?
-
-A universal Go middleware toolkit designed for **any Go application**:
-- **Protocol-agnostic**: Core logic works with HTTP, gRPC, or direct function calls
-- **Framework adapters**: Pre-built adapters for Gin, Hertz, gRPC, Kratos, and more
-- **Domain-specific extensions**: Generic + specialized (e.g., LLM metrics with TTFT/tokens/s)
-- **Production-tested**: Battle-tested patterns from high-scale distributed systems
-- **Zero lock-in**: Use individual packages independently
-- **Minimal dependencies**: Each package has its own `go.mod`
-
-## Project Structure
-
-```
-go-guardian/
-├── ratelimit/              # Rate limiting (core logic)
-│   ├── token_bucket.go     # In-memory token bucket
-│   ├── redis.go            # Redis distributed limiter
-│   └── go.mod
-├── circuitbreaker/         # Circuit breaker (core logic)
-│   ├── breaker.go          # Three-state circuit breaker
-│   └── go.mod
-
-├── trace/                  # Distributed tracing (core logic)
-│   ├── trace.go            # Trace ID generation & propagation
-│   ├── context.go          # Context helpers
-│   └── go.mod
-├── middleware/             # Framework adapters
-│   ├── gin/                # Gin middleware
-│   │   ├── ratelimit.go
-│   │   ├── trace.go
-│   │   └── go.mod
-│   ├── grpc/               # gRPC interceptors
-│   │   ├── ratelimit.go
-│   │   ├── trace.go
-│   │   └── go.mod
-│   └── hertz/              # Hertz middleware
-│       └── go.mod
-├── metrics/                # Prometheus metrics (generic)
-│   ├── http.go             # HTTP metrics (QPS, latency, status codes)
-│   ├── grpc.go             # gRPC metrics (calls, latency, codes)
-│   ├── base.go             # Common metrics (errors, concurrency)
-│   └── go.mod
-├── logger/                 # Structured logging
-│   ├── logger.go           # Zap wrapper with trace context
-│   └── go.mod
-├── extensions/             # Domain-specific extensions (optional)
-│   ├── llm/                # LLM-specific (TTFT, fallback, etc.)
-│   │   ├── metrics.go
-│   │   ├── fallback.go
-│   │   └── go.mod
-│   ├── eino/               # Eino framework integration
-│   │   ├── callbacks.go
-│   │   └── go.mod
-│   └── database/           # Database metrics (coming soon)
-│       └── go.mod
-└── examples/               # Usage examples
-    ├── http-gin/           # Gin microservice
-    ├── grpc/               # gRPC service
-    ├── llm-app/            # LLM application with Eino
-    └── generic/            # Pure Go service (no framework)
-```
-
-### Design Philosophy
-
-- **Core packages** (ratelimit, circuitbreaker, trace, metrics, logger): Pure logic, no framework dependencies, works anywhere
-- **Middleware packages** (middleware/*): Framework-specific adapters (Gin, gRPC, Hertz)
-- **Extension packages** (extensions/*): Domain-specific features (LLM metrics, Eino callbacks, database tracking)
-
-**Dependency Direction**: `middleware → core`, `extensions → core`. Core packages have zero dependency on frameworks or domains.
-
-## Installation
-
-Each package is independently importable:
+### Installation
 
 ```bash
-# Install all core packages
+# Core packages (framework-agnostic)
+go get github.com/why19970628/go-guardian/ratelimit
+go get github.com/why19970628/go-guardian/circuitbreaker
+go get github.com/why19970628/go-guardian/trace
+go get github.com/why19970628/go-guardian/metrics
+go get github.com/why19970628/go-guardian/logger
+
+# Framework adapters
+go get github.com/why19970628/go-guardian/middleware/gin
+go get github.com/why19970628/go-guardian/middleware/grpc
+
+# Domain-specific extensions (optional)
+go get github.com/why19970628/go-guardian/extensions/llm/fallback
+go get github.com/why19970628/go-guardian/extensions/eino/observability
+```
+
+Or install all at once:
+
+```bash
 go get github.com/why19970628/go-guardian/...
 ```
 
-## Quick Start
+### Quick Start
 
-### Core Usage (Any Go Project)
+#### Core Usage (Any Go Project)
 
 ```go
 import (
@@ -125,11 +86,10 @@ func processRequest(ctx context.Context, req *Request) error {
     if err := limiter.Allow(ctx); err != nil {
         return errors.New("rate limit exceeded")
     }
-
+    
     // 2. Distributed tracing
-    traceID := trace.GetTraceID(ctx)
-    log.Printf("[%s] Processing request", traceID)
-
+    ctx = trace.WithTraceID(ctx, trace.GenerateTraceID())
+    
     // 3. Circuit breaker for external calls
     breaker := circuitbreaker.New(5, 10*time.Second)
     return breaker.Call(func() error {
@@ -138,7 +98,7 @@ func processRequest(ctx context.Context, req *Request) error {
 }
 ```
 
-### HTTP (Gin)
+#### HTTP (Gin)
 
 ```go
 import (
@@ -158,7 +118,7 @@ r.Use(ginmw.Metrics())         // Prometheus metrics
 r.POST("/api/users", handler)
 ```
 
-### gRPC
+#### gRPC
 
 ```go
 import (
@@ -182,92 +142,73 @@ server := grpc.NewServer(
 )
 ```
 
-### LLM Application (Optional Extension)
+#### LLM Application (Optional Extension)
 
 ```go
 import (
     "github.com/why19970628/go-guardian/extensions/llm"
-    "github.com/why19970628/go-guardian/extensions/eino"
+    "github.com/why19970628/go-guardian/extensions/eino/observability"
 )
 
 // Initialize LLM-specific metrics (TTFT, tokens/s, etc.)
 llm.InitMetrics("my-llm-app")
 
 // Register Eino callbacks (auto-metrics for ChatModel)
-eino.RegisterCallbacks(logger)
+observability.RegisterCallbacks(logger)
 
 // Fallback strategy for LLM failures
 fallback := llm.NewKeywordFallback()
 response, _ := fallback.Execute(ctx, &llm.Request{
-    UserQuery: "发动机故障",
+    UserQuery: "Engine fault code",
 })
 ```
 
-## Advanced Usage
+### Project Structure
 
-### Layered Defense Architecture
-
-Combine multiple middleware for production-grade reliability:
-
-```go
-// 1. Rate limiting at ingress
-if err := rateLimiter.Allow(ctx); err != nil {
-    metrics.RecordRateLimitReject("ingress")
-    return http.StatusTooManyRequests
-}
-
-// 2. Circuit breaker for LLM calls
-err := circuitBreaker.Call(func() error {
-    // 3. Retry with exponential backoff
-    return retry.Do(func() error {
-        return llmClient.Generate(ctx, prompt)
-    })
-})
-
-// 4. Fallback on failure
-if err != nil {
-    response, _ := fallbackStrategy.Execute(ctx, &fallback.Request{
-        UserQuery: query,
-        LastError: err,
-    })
-    return response
-}
+```
+go-guardian/
+├── ratelimit/              # Rate limiting (core logic)
+│   ├── token_bucket.go     # In-memory token bucket
+│   ├── redis.go            # Redis distributed limiter
+│   └── go.mod
+├── circuitbreaker/         # Circuit breaker (core logic)
+│   ├── breaker.go          # Three-state circuit breaker
+│   └── go.mod
+├── trace/                  # Distributed tracing (core logic)
+│   ├── trace.go            # Trace ID generation & propagation
+│   └── go.mod
+├── metrics/                # Prometheus metrics (generic)
+│   ├── http.go             # HTTP metrics
+│   ├── grpc.go             # gRPC metrics
+│   └── go.mod
+├── logger/                 # Structured logging
+│   ├── logger.go           # Zap wrapper with trace context
+│   └── go.mod
+├── middleware/             # Framework adapters
+│   ├── gin/                # Gin middleware
+│   ├── grpc/               # gRPC interceptors
+│   └── hertz/              # Hertz middleware (coming soon)
+├── extensions/             # Domain-specific extensions (optional)
+│   ├── llm/                # LLM-specific (TTFT, fallback, etc.)
+│   ├── eino/               # Eino framework integration
+│   └── database/           # Database metrics (coming soon)
+└── examples/               # Usage examples
+    ├── http-gin/           # Gin microservice
+    ├── grpc/               # gRPC service
+    └── llm-app/            # LLM application with Eino
 ```
 
-### Grafana Dashboard
+### Design Philosophy
 
-Example PromQL queries for monitoring:
+- **Core packages** (ratelimit, circuitbreaker, trace, metrics, logger): Pure logic, no framework dependencies, works anywhere
+- **Middleware packages** (middleware/*): Framework-specific adapters (Gin, gRPC, Hertz)
+- **Extension packages** (extensions/*): Domain-specific features (LLM metrics, Eino callbacks, database tracking)
 
-```promql
-# LLM Response Latency P95
-histogram_quantile(0.95, rate(llm_call_duration_seconds_bucket[5m]))
-
-# Time To First Token (TTFT) P95
-histogram_quantile(0.95, rate(llm_ttft_seconds_bucket[5m]))
-
-# Token Throughput (tokens/s)
-histogram_quantile(0.50, rate(llm_tokens_per_second_bucket[5m]))
-
-# Error Rate
-rate(llm_calls_total{status="error"}[5m]) / rate(llm_calls_total[5m])
-
-# Circuit Breaker State (0=closed, 1=open, 2=half_open)
-circuit_breaker_state{service="llm"}
-```
-
-## Architecture Philosophy
-
-### Design Principles
-
-1. **Single Responsibility**: Each package does one thing well
-2. **Zero Eino Dependency** (where possible): Rate limiter, circuit breaker, and trace work standalone
-3. **Context Propagation**: All middleware use `context.Context` for trace/metadata passing
-4. **Interface-First**: Abstract interfaces allow custom implementations
-5. **Observable by Default**: Built-in Prometheus metrics for every operation
+**Dependency Direction**: `middleware → core`, `extensions → core`. Core packages have zero dependency on frameworks or domains.
 
 ### Comparison with eino-ext
 
-| Aspect | eino-ext | llm-guard |
+| Aspect | eino-ext | go-guardian |
 | --- | --- | --- |
 | **Focus** | Component implementations (models, tools, retrievers) | Cross-cutting concerns (reliability, observability) |
 | **Dependencies** | Heavy (model SDKs, vector DBs, etc.) | Light (Redis optional, Prometheus optional) |
@@ -275,114 +216,105 @@ circuit_breaker_state{service="llm"}
 | **Use Case** | "What model/tool to use?" | "How to protect and observe models?" |
 | **Framework** | Eino-specific | Framework-agnostic (works with any Go framework) |
 
-Both complement each other: `eino-ext` provides the building blocks, `llm-guard` provides the operational safeguards.
+Both complement each other: `eino-ext` provides the building blocks, `go-guardian` provides the operational safeguards.
 
-## Examples
+### Documentation
 
-See [examples/](./examples) for complete runnable demos:
+- [Quick Start Guide](./QUICKSTART.md) - Get started in 1 minute
+- [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute
+- [Security Policy](./SECURITY.md) - Security best practices
+- [Project Summary](./PROJECT_SUMMARY.md) - Architecture and roadmap
 
-- [Basic Usage](./examples/basic) - Standalone middleware usage
-- [Gin Integration](./examples/gin) - Full-stack Gin + Eino + Middleware
-- [Distributed Tracing](./examples/tracing) - Multi-service trace propagation
-- [Grafana Dashboard](./examples/grafana) - Pre-built Grafana dashboards
+### Contributing
 
-## Contributing
+Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting PRs.
 
-Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+### License
 
-### Adding a New Middleware
-
-1. Create a new directory under project root (e.g., `autoscaler/`)
-2. Add independent `go.mod` with minimal dependencies
-3. Follow interface-first design
-4. Include tests with >80% coverage
-5. Update this README with usage examples
-
-## License
-
-This project is licensed under the Apache-2.0 License - see [LICENSE](./LICENSE) file for details.
-
-## Related Projects
-
-- [Eino](https://github.com/cloudwego/eino) - The core LLM application framework
-- [Eino-Ext](https://github.com/cloudwego/eino-ext) - Official Eino component implementations
+Apache License 2.0 - see [LICENSE](./LICENSE) for details.
 
 ---
 
-# 中文文档
+## 中文
 
 为任何 Go 应用设计的生产级中间件工具包，提供限流、熔断、分布式追踪和完整的可观测性。支持 **HTTP (Gin, Hertz, net/http)**、**gRPC**，以及任何 Go 服务。
 
 **使用场景**：微服务、API 网关、LLM 应用、分布式系统，或任何需要可靠性和可观测性的 Go 后端。
 
-## 功能特性
+### 为什么选择 Go Guardian？
 
-- **限流器**：令牌桶（内存）和 Redis 分布式限流
-- **熔断器**：三态熔断器（关闭 → 打开 → 半开），自动恢复
-- **降级策略**：可插拔降级策略（固定话术、关键词匹配）
-- **分布式追踪**：自动生成 trace ID，上下游传递，日志关联
-- **Prometheus 指标**：完整的 LLM 性能指标（QPS、延迟分位数、TTFT、token 吞吐量等）
+为**任何 Go 应用**设计的通用中间件工具包：
+- **协议无关**：核心逻辑适用于 HTTP、gRPC 或直接函数调用
+- **框架适配器**：为 Gin、Hertz、gRPC 等预构建适配器
+- **领域扩展**：通用 + 专用（如 LLM 指标：TTFT / tokens/s）
+- **生产验证**：来自大规模分布式系统的实战模式
+- **零锁定**：独立使用单个包
+- **最小依赖**：每个包有独立的 `go.mod`
 
-## 快速开始
+### 功能特性
+
+**核心中间件（框架无关）**
+- **限流器**：令牌桶（内存）+ Redis 分布式限流
+- **熔断器**：三态熔断器（CLOSED → OPEN → HALF_OPEN）自动恢复
+- **分布式追踪**：自动生成 trace ID、传递和上下文关联
+- **Prometheus 指标**：完整的可观测性（QPS、延迟分位数、错误率、并发数）
+- **结构化日志**：基于 Zap，自动注入 trace context
+
+**框架适配器**
+- **HTTP**：Gin、Hertz、`net/http` 中间件
+- **gRPC**：Unary 和 Stream 拦截器
+- **即将支持**：Kratos、go-zero
+
+**领域扩展（可选）**
+- **LLM 应用**：TTFT（首 token 延迟）、token 吞吐量、prompt/completion 指标、Eino callbacks
+- **数据库**：查询性能追踪（即将推出）
+- **缓存**：命中率、延迟追踪（即将推出）
 
 ### 安装
 
-每个包可独立导入：
-
 ```bash
-# Core packages (framework-agnostic)
+# 核心包（框架无关）
 go get github.com/why19970628/go-guardian/ratelimit
 go get github.com/why19970628/go-guardian/circuitbreaker
 go get github.com/why19970628/go-guardian/trace
 go get github.com/why19970628/go-guardian/metrics
 go get github.com/why19970628/go-guardian/logger
 
-# Framework adapters
+# 框架适配器
 go get github.com/why19970628/go-guardian/middleware/gin
 go get github.com/why19970628/go-guardian/middleware/grpc
-go get github.com/why19970628/go-guardian/middleware/hertz
 
-# Domain-specific extensions (optional)
-go get github.com/why19970628/go-guardian/extensions/llm      # LLM metrics + fallback
-go get github.com/why19970628/go-guardian/extensions/eino     # Eino callbacks
+# 领域扩展（可选）
+go get github.com/why19970628/go-guardian/extensions/llm/fallback
+go get github.com/why19970628/go-guardian/extensions/eino/observability
 ```
 
-### 使用示例
+或一次性安装全部：
 
-详见 [Quick Start](#quick-start) 英文部分。
-
-## 分层防护架构
-
-```
-客户端请求
-    ↓
-[Trace 中间件] ← 生成/透传 trace_id
-    ↓
-[全局限流] ← Redis 分布式限流
-    ↓
-[并发控制] ← 信号量/令牌桶
-    ↓
-[熔断器] ← LLM 调用快速失败
-    ↓
-[重试] ← 指数退避重试
-    ↓
-[降级策略] ← 固定话术/关键词匹配
-    ↓
-[Prometheus 指标采集] ← 全方位性能监控
+```bash
+go get github.com/why19970628/go-guardian/...
 ```
 
-## 与 eino-ext 的对比
+### 快速开始
 
-| 维度 | eino-ext | llm-guard |
-| --- | --- | --- |
-| **聚焦点** | 组件实现（模型、工具、检索器） | 横切关注点（可靠性、可观测性） |
-| **依赖** | 重（模型 SDK、向量数据库等） | 轻（Redis 可选、Prometheus 可选） |
-| **集成点** | Eino Components | HTTP Middleware + 可选 Eino Callbacks |
-| **使用场景** | "用什么模型/工具？" | "如何保护和监控模型？" |
-| **框架** | Eino 专用 | 框架无关（任何 Go 框架均可） |
+查看 [快速开始指南](./QUICKSTART.md) 了解详细用法。
 
-两者互补：`eino-ext` 提供构建块，`llm-guard` 提供运维保障。
+### 文档
 
-## License
+- [快速开始指南](./QUICKSTART.md) - 1 分钟上手
+- [贡献指南](./CONTRIBUTING.md) - 如何贡献代码
+- [安全策略](./SECURITY.md) - 安全最佳实践
+- [项目总结](./PROJECT_SUMMARY.md) - 架构设计与路线图
 
-Apache-2.0 License
+### 贡献
+
+欢迎贡献！提交 PR 前请阅读 [贡献指南](./CONTRIBUTING.md)。
+
+### 许可证
+
+Apache License 2.0 - 详见 [LICENSE](./LICENSE)。
+
+### 联系方式
+
+- GitHub: https://github.com/why19970628/go-guardian
+- Issues: https://github.com/why19970628/go-guardian/issues
