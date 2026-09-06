@@ -1,4 +1,6 @@
 // Package distributor 多 LLM 提供商渠道分发器
+//
+// 提供智能渠道选择、用户亲和性、健康检查等功能
 package distributor
 
 import (
@@ -28,11 +30,11 @@ type Channel struct {
 	Provider Provider // 提供商
 	BaseURL  string   // API 基础地址
 	APIKey   string   // API 密钥
-	Models   []string // 支持的模型列表
-	Priority int      // 优先级（越小越高）
-	Weight   int      // 权重（用于负载均衡）
+	Models   []string // 支持的模型列表（空表示全部）
+	Priority int      // 优先级（越小越高，用于 priority 策略）
+	Weight   int      // 权重（用于 weighted 策略）
 	Enabled  bool     // 是否启用
-	Healthy  bool     // 是否健康
+	Healthy  bool     // 是否健康（健康检查更新）
 	mu       sync.RWMutex
 }
 
@@ -65,16 +67,27 @@ func (c *Channel) SupportsModel(model string) bool {
 	return false
 }
 
+// Strategy 选择策略
+type Strategy string
+
+const (
+	StrategyPriority Strategy = "priority" // 优先级策略（选择优先级最高的）
+	StrategyRandom   Strategy = "random"   // 随机策略
+	StrategyWeighted Strategy = "weighted" // 加权随机策略
+)
+
 // Distributor 渠道分发器
 type Distributor struct {
-	channels     []*Channel
-	pinnedChan   map[string]string // key: userID, value: channelID（用户亲和性）
-	mu           sync.RWMutex
-	rand         *rand.Rand
-	healthCheck  HealthCheckFunc
-	healthTicker *time.Ticker
-	stopChan     chan struct{}
-	wg           sync.WaitGroup
+	channels           []*Channel
+	defaultStrategy    Strategy          // 默认选择策略
+	enableUserAffinity bool              // 是否启用用户亲和性
+	pinnedChan         map[string]string // key: userID, value: channelID（用户亲和性）
+	mu                 sync.RWMutex
+	rand               *rand.Rand
+	healthCheck        HealthCheckFunc
+	healthTicker       *time.Ticker
+	stopChan           chan struct{}
+	wg                 sync.WaitGroup
 }
 
 // HealthCheckFunc 健康检查函数
@@ -82,9 +95,11 @@ type HealthCheckFunc func(ctx context.Context, channel *Channel) error
 
 // Config 分发器配置
 type Config struct {
-	Channels          []*Channel
-	HealthCheckFunc   HealthCheckFunc
-	HealthCheckPeriod time.Duration // 健康检查周期（默认 30s）
+	Channels           []*Channel      // 渠道列表
+	DefaultStrategy    Strategy        // 默认选择策略（默认 priority）
+	EnableUserAffinity bool            // 是否启用用户亲和性（默认 false）
+	HealthCheckFunc    HealthCheckFunc // 健康检查函数（可选）
+	HealthCheckPeriod  time.Duration   // 健康检查周期（默认 30s）
 }
 
 // NewDistributor 创建渠道分发器
@@ -92,13 +107,18 @@ func NewDistributor(cfg Config) *Distributor {
 	if cfg.HealthCheckPeriod == 0 {
 		cfg.HealthCheckPeriod = 30 * time.Second
 	}
+	if cfg.DefaultStrategy == "" {
+		cfg.DefaultStrategy = StrategyPriority
+	}
 
 	d := &Distributor{
-		channels:    cfg.Channels,
-		pinnedChan:  make(map[string]string),
-		rand:        rand.New(rand.NewSource(time.Now().UnixNano())),
-		healthCheck: cfg.HealthCheckFunc,
-		stopChan:    make(chan struct{}),
+		channels:           cfg.Channels,
+		defaultStrategy:    cfg.DefaultStrategy,
+		enableUserAffinity: cfg.EnableUserAffinity,
+		pinnedChan:         make(map[string]string),
+		rand:               rand.New(rand.NewSource(time.Now().UnixNano())),
+		healthCheck:        cfg.HealthCheckFunc,
+		stopChan:           make(chan struct{}),
 	}
 
 	// 启动健康检查
@@ -114,13 +134,18 @@ func NewDistributor(cfg Config) *Distributor {
 // SelectChannel 选择渠道
 // userID: 用户 ID（可选，用于亲和性）
 // model: 模型名称
-// strategy: 选择策略（priority / random / weighted）
+// strategy: 选择策略（传空字符串使用默认策略）
 func (d *Distributor) SelectChannel(userID, model string, strategy Strategy) (*Channel, error) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
+	// 0. 使用默认策略（如果未指定）
+	if strategy == "" {
+		strategy = d.defaultStrategy
+	}
+
 	// 1. 检查用户亲和性
-	if userID != "" {
+	if d.enableUserAffinity && userID != "" {
 		if pinnedID, ok := d.pinnedChan[userID]; ok {
 			for _, ch := range d.channels {
 				if ch.ID == pinnedID && ch.IsHealthy() && ch.SupportsModel(model) {
@@ -156,21 +181,49 @@ func (d *Distributor) SelectChannel(userID, model string, strategy Strategy) (*C
 	}
 
 	// 4. 记录用户亲和性
-	if userID != "" && selected != nil {
+	if d.enableUserAffinity && userID != "" && selected != nil {
 		d.pinnedChan[userID] = selected.ID
 	}
 
 	return selected, nil
 }
 
-// Strategy 选择策略
-type Strategy string
+// SelectChannelWithDefault 使用默认策略选择渠道（简化调用）
+func (d *Distributor) SelectChannelWithDefault(userID, model string) (*Channel, error) {
+	return d.SelectChannel(userID, model, "")
+}
 
-const (
-	StrategyPriority Strategy = "priority" // 优先级策略（选择优先级最高的）
-	StrategyRandom   Strategy = "random"   // 随机策略
-	StrategyWeighted Strategy = "weighted" // 加权随机策略
-)
+// SetDefaultStrategy 设置默认选择策略（运行时可调整）
+func (d *Distributor) SetDefaultStrategy(strategy Strategy) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.defaultStrategy = strategy
+}
+
+// GetDefaultStrategy 获取默认选择策略
+func (d *Distributor) GetDefaultStrategy() Strategy {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	return d.defaultStrategy
+}
+
+// EnableUserAffinity 启用/禁用用户亲和性（运行时可调整）
+func (d *Distributor) EnableUserAffinity(enable bool) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.enableUserAffinity = enable
+	if !enable {
+		// 禁用时清空亲和性记录
+		d.pinnedChan = make(map[string]string)
+	}
+}
+
+// IsUserAffinityEnabled 检查用户亲和性是否启用
+func (d *Distributor) IsUserAffinityEnabled() bool {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	return d.enableUserAffinity
+}
 
 // selectByPriority 按优先级选择（优先级最高的）
 func (d *Distributor) selectByPriority(candidates []*Channel) *Channel {
@@ -298,4 +351,19 @@ func (d *Distributor) UnpinUser(userID string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	delete(d.pinnedChan, userID)
+}
+
+// GetPinnedChannel 获取用户绑定的渠道 ID
+func (d *Distributor) GetPinnedChannel(userID string) (string, bool) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	channelID, ok := d.pinnedChan[userID]
+	return channelID, ok
+}
+
+// CountPinnedUsers 统计绑定用户数
+func (d *Distributor) CountPinnedUsers() int {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	return len(d.pinnedChan)
 }
