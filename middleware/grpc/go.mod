@@ -1,10 +1,10 @@
-module github.com/yourusername/go-guardian/middleware/grpc
+module github.com/wanghuayang820310/go-guardian/middleware/grpc
 
 go 1.21
 
 require (
-	github.com/yourusername/go-guardian/ratelimit v0.1.0
-	github.com/yourusername/go-guardian/trace v0.1.0
+	github.com/wanghuayang820310/go-guardian/ratelimit v0.1.0
+	github.com/wanghuayang820310/go-guardian/trace v0.1.0
 	google.golang.org/grpc v1.69.4
 )
 

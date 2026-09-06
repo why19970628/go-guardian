@@ -4,8 +4,8 @@ package grpc
 import (
 	"context"
 
-	"github.com/yourusername/go-guardian/ratelimit"
-	"github.com/yourusername/go-guardian/trace"
+	"github.com/wanghuayang820310/go-guardian/ratelimit"
+	"github.com/wanghuayang820310/go-guardian/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

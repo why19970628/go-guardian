@@ -6,9 +6,9 @@
 
 ```go
 import (
-    "github.com/yourusername/go-guardian/ratelimit"
-    "github.com/yourusername/go-guardian/circuitbreaker"
-    "github.com/yourusername/go-guardian/trace"
+    "github.com/wanghuayang820310/go-guardian/ratelimit"
+    "github.com/wanghuayang820310/go-guardian/circuitbreaker"
+    "github.com/wanghuayang820310/go-guardian/trace"
 )
 
 // 1. 初始化组件
@@ -37,7 +37,7 @@ func handleRequest(ctx context.Context, req *Request) error {
 ```go
 import (
     "github.com/gin-gonic/gin"
-    ginmw "github.com/yourusername/go-guardian/middleware/gin"
+    ginmw "github.com/wanghuayang820310/go-guardian/middleware/gin"
 )
 
 r := gin.Default()
@@ -51,7 +51,7 @@ r.POST("/api", handler)
 ```go
 import (
     "google.golang.org/grpc"
-    grpcmw "github.com/yourusername/go-guardian/middleware/grpc"
+    grpcmw "github.com/wanghuayang820310/go-guardian/middleware/grpc"
 )
 
 server := grpc.NewServer(
@@ -64,8 +64,8 @@ server := grpc.NewServer(
 
 ```go
 import (
-    "github.com/yourusername/go-guardian/extensions/llm"
-    "github.com/yourusername/go-guardian/extensions/eino/observability"
+    "github.com/wanghuayang820310/go-guardian/extensions/llm"
+    "github.com/wanghuayang820310/go-guardian/extensions/eino/observability"
 )
 
 // 自动监控所有 ChatModel 调用
@@ -199,9 +199,9 @@ histogram_quantile(0.50, rate(guardian_llm_tokens_per_second_bucket[5m]))
 
 ## 项目地址
 
-- GitHub: `https://github.com/yourusername/go-guardian`
-- 文档: `https://github.com/yourusername/go-guardian/blob/main/README.md`
-- 示例: `https://github.com/yourusername/go-guardian/tree/main/examples`
+- GitHub: `https://github.com/wanghuayang820310/go-guardian`
+- 文档: `https://github.com/wanghuayang820310/go-guardian/blob/main/README.md`
+- 示例: `https://github.com/wanghuayang820310/go-guardian/tree/main/examples`
 
 ## 贡献
 

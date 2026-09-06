@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yourusername/go-guardian/ratelimit"
-	"github.com/yourusername/go-guardian/trace"
+	"github.com/wanghuayang820310/go-guardian/ratelimit"
+	"github.com/wanghuayang820310/go-guardian/trace"
 )
 
 // RateLimit returns a Gin middleware that applies rate limiting

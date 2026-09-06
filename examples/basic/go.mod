@@ -7,11 +7,11 @@ toolchain go1.24.6
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/prometheus/client_golang v1.20.5
-	github.com/yourusername/go-guardian/circuitbreaker v0.1.0
-	github.com/yourusername/go-guardian/fallback v0.1.0
-	github.com/yourusername/go-guardian/metrics v0.1.0
-	github.com/yourusername/go-guardian/ratelimit v0.1.0
-	github.com/yourusername/go-guardian/trace v0.1.0
+	github.com/wanghuayang820310/go-guardian/circuitbreaker v0.1.0
+	github.com/wanghuayang820310/go-guardian/fallback v0.1.0
+	github.com/wanghuayang820310/go-guardian/metrics v0.1.0
+	github.com/wanghuayang820310/go-guardian/ratelimit v0.1.0
+	github.com/wanghuayang820310/go-guardian/trace v0.1.0
 )
 
 require (
@@ -70,9 +70,9 @@ require (
 
 // Local development: use replace directives
 replace (
-	github.com/yourusername/go-guardian/circuitbreaker => ../../circuitbreaker
-	github.com/yourusername/go-guardian/fallback => ../../fallback
-	github.com/yourusername/go-guardian/metrics => ../../metrics
-	github.com/yourusername/go-guardian/ratelimit => ../../ratelimit
-	github.com/yourusername/go-guardian/trace => ../../trace
+	github.com/wanghuayang820310/go-guardian/circuitbreaker => ../../circuitbreaker
+	github.com/wanghuayang820310/go-guardian/fallback => ../../fallback
+	github.com/wanghuayang820310/go-guardian/metrics => ../../metrics
+	github.com/wanghuayang820310/go-guardian/ratelimit => ../../ratelimit
+	github.com/wanghuayang820310/go-guardian/trace => ../../trace
 )
