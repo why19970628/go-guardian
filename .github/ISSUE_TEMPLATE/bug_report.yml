@@ -1,0 +1,94 @@
+name: Bug Report
+description: Report a bug in go-guardian
+title: "[Bug]: "
+labels: ["bug", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug!
+
+  - type: input
+    id: package
+    attributes:
+      label: Package
+      description: Which go-guardian package is affected?
+      placeholder: e.g., ratelimit, circuitbreaker, trace
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of go-guardian are you using?
+      placeholder: e.g., v0.1.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Initialize rate limiter with...
+        2. Call Allow() with...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Sample
+      description: Minimal code to reproduce the issue
+      render: go
+
+  - type: input
+    id: go-version
+    attributes:
+      label: Go Version
+      description: Output of `go version`
+      placeholder: e.g., go version go1.21.0 darwin/amd64
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: e.g., macOS 14.0, Ubuntu 22.04
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem

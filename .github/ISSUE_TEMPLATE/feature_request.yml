@@ -1,0 +1,64 @@
+name: Feature Request
+description: Suggest a new feature for go-guardian
+title: "[Feature]: "
+labels: ["enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature!
+
+  - type: input
+    id: package
+    attributes:
+      label: Package
+      description: Which package would this feature affect? (or "new package")
+      placeholder: e.g., ratelimit, middleware/gin, new package
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe alternatives you've considered
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Usage
+      description: Show how you'd use this feature
+      render: go
+
+  - type: checkboxes
+    id: breaking
+    attributes:
+      label: Breaking Change
+      description: Would this be a breaking change?
+      options:
+        - label: This would be a breaking change
+        - label: This would require a major version bump
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context or screenshots
