@@ -182,7 +182,9 @@ go-guardian/
 │   ├── grpc.go             # gRPC metrics
 │   └── go.mod
 ├── logger/                 # Structured logging
-│   ├── logger.go           # Zap wrapper with trace context
+│   ├── contract.go         # Framework-agnostic Logger contract + NopLogger
+│   ├── zap_adapter.go      # Zap implementation adapter
+│   ├── logger.go           # Legacy/global Zap convenience API
 │   └── go.mod
 ├── middleware/             # Framework adapters
 │   ├── gin/                # Gin middleware
@@ -205,6 +207,18 @@ go-guardian/
 - **Extension packages** (extensions/*): Domain-specific features (LLM metrics, Eino callbacks, database tracking)
 
 **Dependency Direction**: `middleware → core`, `extensions → core`. Core packages have zero dependency on frameworks or domains.
+
+### Logging abstraction
+
+The `logger` module exposes the framework-independent `logger.Logger` interface. The current implementation is `logger.NewZap(*zap.SugaredLogger)`, while `logger.NopLogger` is available for tests and disabled logging. Business packages should depend on `logger.Logger`, not on `*zap.SugaredLogger`; future `slog` or other adapters can implement the same contract without changing callers.
+
+```go
+var log logger.Logger = logger.NewZap(zapLogger.Sugar())
+log = log.WithContext(ctx)
+log.Infow("request completed", "run_id", runID)
+```
+
+The existing package-level `Init`, `Infow`, `Warnw` and related functions remain as compatibility helpers. They are not the abstraction boundary for new code.
 
 ### Comparison with eino-ext
 
