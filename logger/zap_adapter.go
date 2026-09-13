@@ -18,7 +18,19 @@ func NewZap(value *zap.SugaredLogger) Logger {
 	return &ZapLogger{logger: value}
 }
 
-func (l *ZapLogger) Debug(args ...interface{})                   { l.logger.Debug(args...) }
+func (l *ZapLogger) Debug(args ...interface{}) { l.logger.Debug(args...) }
+func (l *ZapLogger) DebugContext(ctx context.Context, msg string, args ...interface{}) {
+	l.WithContext(ctx).Debugw(msg, args...)
+}
+func (l *ZapLogger) InfoContext(ctx context.Context, msg string, args ...interface{}) {
+	l.WithContext(ctx).Infow(msg, args...)
+}
+func (l *ZapLogger) WarnContext(ctx context.Context, msg string, args ...interface{}) {
+	l.WithContext(ctx).Warnw(msg, args...)
+}
+func (l *ZapLogger) ErrorContext(ctx context.Context, msg string, args ...interface{}) {
+	l.WithContext(ctx).Errorw(msg, args...)
+}
 func (l *ZapLogger) Debugf(template string, args ...interface{}) { l.logger.Debugf(template, args...) }
 func (l *ZapLogger) Debugw(msg string, args ...interface{})      { l.logger.Debugw(msg, args...) }
 func (l *ZapLogger) Info(args ...interface{})                    { l.logger.Info(args...) }

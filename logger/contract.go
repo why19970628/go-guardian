@@ -7,6 +7,10 @@ import "context"
 // 业务包只依赖这个接口，不直接依赖 Zap。Zap、slog 或其它日志实现
 // 通过适配器接入，避免基础库把具体日志框架传递给所有调用方。
 type Logger interface {
+	DebugContext(ctx context.Context, msg string, args ...interface{})
+	InfoContext(ctx context.Context, msg string, args ...interface{})
+	WarnContext(ctx context.Context, msg string, args ...interface{})
+	ErrorContext(ctx context.Context, msg string, args ...interface{})
 	Debug(args ...interface{})
 	Debugf(template string, args ...interface{})
 	Debugw(msg string, keysAndValues ...interface{})
@@ -27,18 +31,22 @@ type Logger interface {
 // NopLogger 丢弃所有日志，适合测试和可选依赖未配置的场景。
 type NopLogger struct{}
 
-func (NopLogger) Debug(...interface{})                 {}
-func (NopLogger) Debugf(string, ...interface{})        {}
-func (NopLogger) Debugw(string, ...interface{})        {}
-func (NopLogger) Info(...interface{})                  {}
-func (NopLogger) Infof(string, ...interface{})         {}
-func (NopLogger) Infow(string, ...interface{})         {}
-func (NopLogger) Warn(...interface{})                  {}
-func (NopLogger) Warnf(string, ...interface{})         {}
-func (NopLogger) Warnw(string, ...interface{})         {}
-func (NopLogger) Error(...interface{})                 {}
-func (NopLogger) Errorf(string, ...interface{})        {}
-func (NopLogger) Errorw(string, ...interface{})        {}
-func (n NopLogger) WithContext(context.Context) Logger { return n }
-func (n NopLogger) With(...interface{}) Logger         { return n }
-func (NopLogger) Sync() error                          { return nil }
+func (NopLogger) DebugContext(context.Context, string, ...interface{}) {}
+func (NopLogger) InfoContext(context.Context, string, ...interface{})  {}
+func (NopLogger) WarnContext(context.Context, string, ...interface{})  {}
+func (NopLogger) ErrorContext(context.Context, string, ...interface{}) {}
+func (NopLogger) Debug(...interface{})                                 {}
+func (NopLogger) Debugf(string, ...interface{})                        {}
+func (NopLogger) Debugw(string, ...interface{})                        {}
+func (NopLogger) Info(...interface{})                                  {}
+func (NopLogger) Infof(string, ...interface{})                         {}
+func (NopLogger) Infow(string, ...interface{})                         {}
+func (NopLogger) Warn(...interface{})                                  {}
+func (NopLogger) Warnf(string, ...interface{})                         {}
+func (NopLogger) Warnw(string, ...interface{})                         {}
+func (NopLogger) Error(...interface{})                                 {}
+func (NopLogger) Errorf(string, ...interface{})                        {}
+func (NopLogger) Errorw(string, ...interface{})                        {}
+func (n NopLogger) WithContext(context.Context) Logger                 { return n }
+func (n NopLogger) With(...interface{}) Logger                         { return n }
+func (NopLogger) Sync() error                                          { return nil }
