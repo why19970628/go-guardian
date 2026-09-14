@@ -20,23 +20,30 @@ func NewZap(value *zap.SugaredLogger) Logger {
 }
 
 func (l *ZapLogger) Debug(ctx context.Context, msg string, args ...interface{}) {
-	l.WithContext(ctx).logger.Debugw(msg, args...)
+	l.zapWithContext(ctx).Debugw(msg, args...)
 }
 func (l *ZapLogger) Info(ctx context.Context, msg string, args ...interface{}) {
-	l.WithContext(ctx).Infow(msg, args...)
+	l.zapWithContext(ctx).Infow(msg, args...)
 }
 func (l *ZapLogger) Warn(ctx context.Context, msg string, args ...interface{}) {
-	l.WithContext(ctx).Warnw(msg, args...)
+	l.zapWithContext(ctx).Warnw(msg, args...)
 }
 func (l *ZapLogger) Error(ctx context.Context, msg string, args ...interface{}) {
-	l.WithContext(ctx).Errorw(msg, args...)
+	l.zapWithContext(ctx).Errorw(msg, args...)
 }
 func (l *ZapLogger) Sync() error { return l.logger.Sync() }
 func (l *ZapLogger) With(args ...interface{}) Logger {
 	return &ZapLogger{logger: l.logger.With(args...)}
 }
 func (l *ZapLogger) WithContext(ctx context.Context) Logger {
+	return &ZapLogger{logger: l.zapWithContext(ctx)}
+}
+
+func (l *ZapLogger) zapWithContext(ctx context.Context) *zap.SugaredLogger {
 	fields := []interface{}{}
+	if ctx == nil {
+		return l.logger
+	}
 	if traceID := trace.GetTraceID(ctx); traceID != "" {
 		fields = append(fields, "trace_id", traceID)
 	}
@@ -44,7 +51,7 @@ func (l *ZapLogger) WithContext(ctx context.Context) Logger {
 	if spanContext.IsValid() {
 		fields = append(fields, "trace_id", spanContext.TraceID().String(), "span_id", spanContext.SpanID().String())
 	}
-	return &ZapLogger{logger: l.logger.With(fields...)}
+	return l.logger.With(fields...)
 }
 
 var _ Logger = (*ZapLogger)(nil)
