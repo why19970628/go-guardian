@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/why19970628/go-guardian/trace"
+	oteltrace "go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -35,7 +36,15 @@ func (l *ZapLogger) With(args ...interface{}) Logger {
 	return &ZapLogger{logger: l.logger.With(args...)}
 }
 func (l *ZapLogger) WithContext(ctx context.Context) Logger {
-	return &ZapLogger{logger: l.logger.With("trace_id", trace.GetTraceID(ctx))}
+	fields := []interface{}{}
+	if traceID := trace.GetTraceID(ctx); traceID != "" {
+		fields = append(fields, "trace_id", traceID)
+	}
+	spanContext := oteltrace.SpanContextFromContext(ctx)
+	if spanContext.IsValid() {
+		fields = append(fields, "trace_id", spanContext.TraceID().String(), "span_id", spanContext.SpanID().String())
+	}
+	return &ZapLogger{logger: l.logger.With(fields...)}
 }
 
 var _ Logger = (*ZapLogger)(nil)

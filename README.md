@@ -210,7 +210,7 @@ go-guardian/
 
 ### Logging abstraction
 
-The `logger` module exposes the framework-independent `logger.Logger` interface. The current implementation is `logger.NewZap(*zap.SugaredLogger)`, while `logger.NopLogger` is available for tests and disabled logging. Business packages should depend on `logger.Logger`, not on `*zap.SugaredLogger`; future `slog` or other adapters can implement the same contract without changing callers.
+The `logger` module exposes the framework-independent `logger.Logger` interface. The current implementation is `logger.NewZap(*zap.SugaredLogger)`, while `logger.NopLogger` is available for tests and disabled logging. Context-aware methods automatically inject the legacy trace ID and OTEL `trace_id`/`span_id`; business-only IDs such as `run_id` remain explicit fields. Business packages should depend on `logger.Logger`, not on `*zap.SugaredLogger`; future `slog` or other adapters can implement the same contract without changing callers.
 
 ```go
 var log logger.Logger = logger.NewZap(zapLogger.Sugar())
