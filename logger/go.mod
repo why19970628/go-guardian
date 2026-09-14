@@ -1,9 +1,10 @@
 module github.com/why19970628/go-guardian/logger
 
-go 1.21.0
+go 1.23.0
 
 require (
 	github.com/why19970628/go-guardian/trace v0.1.0
+	go.opentelemetry.io/otel/trace v1.36.0
 	go.uber.org/zap v1.27.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
