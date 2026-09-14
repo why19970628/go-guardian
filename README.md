@@ -214,8 +214,7 @@ The `logger` module exposes the framework-independent `logger.Logger` interface.
 
 ```go
 var log logger.Logger = logger.NewZap(zapLogger.Sugar())
-log = log.WithContext(ctx)
-log.Infow("request completed", "run_id", runID)
+log.Info(ctx, "request completed", "run_id", runID)
 ```
 
 The existing package-level `Init`, `Infow`, `Warnw` and related functions remain as compatibility helpers. They are not the abstraction boundary for new code.
