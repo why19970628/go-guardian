@@ -5,7 +5,7 @@ go 1.24.6
 require (
 	github.com/bytedance/gopkg v0.1.3
 	github.com/gin-gonic/gin v1.10.0
-	go.uber.org/zap v1.27.0
+	go.uber.org/zap v1.28.0
 )
 
 require (
